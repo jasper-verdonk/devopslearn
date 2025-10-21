@@ -1,0 +1,95 @@
+section  general
+# In this section you specify setting every router (Spine and Leaves get)
+# As well as some global paramaters.
+#
+# organisation    : The name of the organisation to display in login message
+# hostname-prefix : A hostname gets this and then spines S1..XX Leaves L1..Y
+# p2p-range       : Network rang to set point-to-point in. from x.x.0.1 to x.x.4.254
+#                 : with /30 ranges
+# loopback-range  : Class C range for /32 IP's on loop loopback
+#                   Spines go first first spine gets 1 etc. First leave gets 1+max-Spines
+# nameserver      : Dns server, multiple allowed. Optional.
+# ntpserver       : ntp server name or address, multiple allowed. Optional
+# snmp-community  : Community getting read-only permision. Optional
+# snmp-trap-server: Trapserver, optional
+# syslog          : specify <IP> <facility> <level>
+# leaves          : Number of leave switches in the fabric
+# spines          : Number of present spine switches in the fabric
+# max-spines      : Number of maximum spines the fabric can grow to
+#                   max-spines must be greater or equal to number of Spines
+#                   max-spine is used as offset in IP address calculation
+#                   should typically be four or six
+# max-Leaves      : Maximum number of leaves to support within ip numbering schema
+#                 : In principle an ip-fabric always can scale more, but then the IP numbering gets disorganized.
+#                 : A practical limit is also the number of interfaces on the spines ....
+# spine-start-int : First interface to use on spine for leave connection
+# leave-start-int : Guess
+# mtu			        : mtu size on Spine-leave connections
+#
+# set             : all lines in inputfile beginning wit "set" will be copied to all config files
+
+
+organisation     K1 b.v.
+hostname-prefix  K1-
+loopback-range	 172.31.172
+p2p-range		     10.255
+oob-range        172.16.255
+ntp-server       nl.pool.ntp.org
+ntp-server	     1.2.3.4
+Nameserver       8.8.8.8
+nameserver       8.8.4.4
+syslog           192.168.1.1 any any
+syslog           10.10.1.1  authorization warning
+snmp-community   Monitor
+snmp-trap-server 192.168.1.3
+leaves           4
+spines           2
+max-spines       4
+max-leaves       8
+mtu              9114
+spine-start-int  et-0/0/0
+leave-start-int  et-0/2/0
+
+set system domain-name K1.local
+
+vlan 10 clients
+vlan-ip 10.100.10.254/24
+member l1 xe-0/0/10 trunk
+member l2 xe-0/0/10 trunk
+member l3 xe-0/0/10 trunk
+member l4 xe-0/0/10 trunk
+member l1 xe-0/0/11 access
+member l1 xe-0/0/20 trunk pair l2 xe-0/0/20
+member l1 xe-0/0/21 access pair l2 xe-0/0/21
+
+vlan 20 servers
+vlan-ip 10.100.20.254/24
+member l1 xe-0/0/10 trunk
+member l2 xe-0/0/10 trunk
+member l3 xe-0/0/10 trunk
+member l4 xe-0/0/10 trunk
+member l2 xe-0/0/11 access
+member l1 xe-0/0/20 trunk pair l2 xe-0/0/20
+
+vlan 30
+vlan-ip 10.100.50.254/24
+member l1 xe-0/0/10 trunk
+member l2 xe-0/0/10 trunk
+member l3 xe-0/0/10 trunk
+member l4 xe-0/0/10 trunk
+member l3 xe-0/0/11 access
+member l1 xe-0/0/20 trunk pair l2 xe-0/0/20
+member l3 xe-0/0/20 trunk pair l4 xe-0/0/20
+member l3 xe-0/0/21 access pair l4 xe-0/0/21
+
+
+ vlan 40
+ member l1 xe-0/0/10 trunk
+ member l2 xe-0/0/10 trunk
+ member l3 xe-0/0/10 trunk
+ member l4 xe-0/0/10 trunk
+ member l4 xe-0/0/11 access
+ member l1 xe-0/0/20 trunk pair l2 xe-0/0/20
+ member l3 xe-0/0/20 trunk pair l4 xe-0/0/20
+ member l1 xe-0/0/47 access pair l2 xe-0/0/46
+ member l1 xe-0/0/24 access pair l2 xe-0/0/24

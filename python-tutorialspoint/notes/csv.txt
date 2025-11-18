@@ -1,0 +1,6 @@
+name, age, fav_hobby
+ben, 24, golf
+susan, 30, tennis
+mike, 52, hiking
+julie, 36, swimming
+

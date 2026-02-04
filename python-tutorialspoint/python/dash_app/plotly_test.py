@@ -7,10 +7,27 @@ from dash.dependencies import Output, Input
 import plotly.express as px
 import plotly.graph_objects as graph_objects
 
+
 gapminder = px.data.gapminder()
 gapminder.head()
 
+scatter_fig = px.scatter(data_frame=gapminder,
+           x='gdpPercap',
+           y='lifeExp',
+           size='pop',
+           facet_col='continent',
+           color='continent',
+           title='Life Expectancy and GPD per capita from 1952 to 2007',
+           labels={'gdpPercap': 'GDP per Capita','lifeExp': 'Life Expectancy'},
+           log_x=True,
+           range_y=[20,100],
+           hover_name='country',
+           size_max=80,
+           animation_frame='year'         
+           )    
 
+#try facet_row as well          
+#check scatter documentation
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 
 country = gapminder['country'].unique()
@@ -42,7 +59,8 @@ app.layout = dbc.Container([
     dbc.Row([
         dbc.Col(dcc.Graph(id='pop_by_year'), md=6),
         dbc.Col(dcc.Graph(id='lifeexp_by_year'), md=6),
-        dbc.Col(dcc.Graph(id='country_trend')),        
+        dbc.Col(dcc.Graph(id='country_trend')), 
+        dcc.Graph(id='scatter_plot', figure=scatter_fig)       
     ]),
 ], fluid=True)
 

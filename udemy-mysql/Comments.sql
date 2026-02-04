@@ -40,6 +40,16 @@ FROM actor;
 -- SELECT ALL DATA WITHIN CUSTOMERS TABLE (specifying schema)
 SELECT * from sakila.customer;
 
+-- What are the different ratings that are assinged to films? 
+SELECT DISTINCT rating FROM film;
+
+-- What are the different rental rates that are applied to films? 
+SELECT DISTINCT rental_rate FROM film;
+
+-- Are there films within each rating at each price level? 
+SELECT DISTINCT rating, rental_rate FROM film;
+
+
 
 
 
